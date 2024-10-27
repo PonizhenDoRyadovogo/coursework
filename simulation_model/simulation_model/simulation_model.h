@@ -49,10 +49,11 @@ public:
 	void inputRandomVariableParams();
 	void inputTransitionProbability();
 	void print() const;
-	std::vector<double> simulation(const int end_time, const int begin_time = 0);
+	std::vector<double> simulation(const double end_time, double begin_time = 0.0);
 private:
 	int _lotteryInitialState() const;
 	double _timeSpentState(const int state, NumberRV& number_RV);
+	int _lotteryState(int from_state, NumberRV& number_rv) const;
 private:
 	std::vector<int> m_lambdaI;
 	std::vector<State> m_states;

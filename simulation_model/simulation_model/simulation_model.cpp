@@ -101,13 +101,52 @@ double Model::_timeSpentState(const int state, NumberRV& number_RV)
 	return tao;
 }
 
-std::vector<double> Model::simulation(const int end_time, const int begin_time)
+int Model::_lotteryState(int from_state, NumberRV& number_rv) const
+{
+	double sum = 0;
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_int_distribution<> dist(0, 100);
+	double random_number = dist(gen) / 100.0;
+	for (int i = 0; i < m_number_states; ++i)
+	{
+		if (number_rv == NumberRV::First)
+		{
+			sum = sum + m_states[from_state].m_transitionProbabilities[i].first;
+		}
+		else
+		{
+			sum = sum + m_states[from_state].m_transitionProbabilities[i].second;
+		}
+		if (random_number <= sum)
+		{
+			return i;
+		}
+	}
+	return INT_MAX;//is_valid?
+}
+
+std::vector<double> Model::simulation(const double end_time, double begin_time)
 {
 	std::vector<double> result_vector;
+	result_vector.push_back(begin_time);
 	int initial_state = _lotteryInitialState();
 	NumberRV number_RV = NumberRV::First;
 	double tao = _timeSpentState(initial_state, number_RV);
-
+	begin_time = begin_time + tao;
+	result_vector.push_back(begin_time);
+	int current_state = initial_state;
+	while (begin_time <= end_time)
+	{
+		current_state = _lotteryState(current_state, number_RV);
+		assert(current_state != INT_MAX);
+		tao = _timeSpentState(current_state, number_RV);
+		begin_time = begin_time + tao;
+		if (begin_time <= end_time)
+		{
+			result_vector.push_back(begin_time);
+		}
+	}
 	return result_vector;
 }
 

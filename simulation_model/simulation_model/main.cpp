@@ -12,7 +12,10 @@ int main()
 	Model model(n, vec);
 	model.inputTransitionProbability();
 	model.inputRandomVariableParams();
-	model.simulation(5);
-	model.print();
+	std::vector<double> result = model.simulation(5);
+	for (const auto& i : result)
+	{
+		std::cout << i << " ";
+	}
 	return 0;
 }
