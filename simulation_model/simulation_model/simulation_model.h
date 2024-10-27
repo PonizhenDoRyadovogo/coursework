@@ -4,7 +4,8 @@
 #include <vector>
 #include <random>
 #include <utility>
-#include <assert.h>
+
+#include "support_function.h"
 
 //the structure stores the parameters of random variables
 struct RandomVariableParametrs {
@@ -12,9 +13,18 @@ struct RandomVariableParametrs {
 	double alpha;
 };
 
+enum class NumberRV
+{
+	First,
+	Second
+};
+
 //the structure stores information about states (state number, transition probabilities, parameters of random variables)
 class State {
 public:
+	friend class Model;
+public:
+	//ToDo: State();
 	State(int id, int n)
 		: m_id(id), m_transitionProbabilities(n)
 	{
@@ -25,21 +35,26 @@ public:
 	void setTransitionProbability(int toState, double prob1, double prob2);
 	void setRandomVariableParams(double lambda, double alpha);
 	void print() const;
-private:
+protected:
 	int m_id;
 	std::vector<std::pair<double, double>> m_transitionProbabilities;
 	RandomVariableParametrs m_paramsRV;
 };
 
-
 class Model {
 public:
-	Model(int n);
+	//ToDo: Model();
+	Model(int n, std::vector<int>& lambdaI);
 	int getNumberStates() const;
 	void inputRandomVariableParams();
 	void inputTransitionProbability();
 	void print() const;
+	std::vector<double> simulation(const int end_time, const int begin_time = 0);
 private:
+	int _lotteryInitialState() const;
+	double _timeSpentState(const int state, NumberRV& number_RV);
+private:
+	std::vector<int> m_lambdaI;
 	std::vector<State> m_states;
 	int m_number_states = 2;
 };

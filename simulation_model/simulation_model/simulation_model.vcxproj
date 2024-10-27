@@ -129,9 +129,11 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="simulation_model.cpp" />
+    <ClCompile Include="support_function.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="simulation_model.h" />
+    <ClInclude Include="support_function.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

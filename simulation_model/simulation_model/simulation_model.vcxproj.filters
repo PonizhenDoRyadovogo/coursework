@@ -21,9 +21,15 @@
     <ClCompile Include="simulation_model.cpp">
       <Filter>Файлы ресурсов</Filter>
     </ClCompile>
+    <ClCompile Include="support_function.cpp">
+      <Filter>Файлы ресурсов</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="simulation_model.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="support_function.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
