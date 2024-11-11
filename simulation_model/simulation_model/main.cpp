@@ -8,7 +8,7 @@ int main()
 	std::cout << "Enter number of states: ";
 	std::cin >> n;
 	std::cout << std::endl;
-	std::vector<int> vec = { 1, 2 };
+	std::vector<int> vec = { 3, 1};
 	Model model(n, vec);
 	model.inputTransitionProbability();
 	model.inputRandomVariableParams();

@@ -11,6 +11,7 @@
         } \
     } while (false)
 
+//here, lambdas make sense of parameters for random variables, as well as the state of a random process
 Model::Model(int n, std::vector<int> &lambdaI)
 {
 	ASSERT_MSG(n > 0, "The number of states must be greater than 0!");
@@ -29,14 +30,14 @@ Model::Model(int n, std::vector<int> &lambdaI)
 
 void Model::inputRandomVariableParams()
 {
-	double lambda, alpha;
+	double alpha;
 	for (int i = 0; i < m_states.size(); ++i)
 	{
-		std::cout << "Enter the parameters of the random variables lambda and alpha, respectively, for " << i + 1 << " state: ";
-		std::cin >> lambda >> alpha;
+		std::cout << "Enter the parameter of the random variable alpha for " << i + 1 << " state: ";
+		std::cin >> alpha;
 		std::cout << std::endl;
 
-		m_states[i].setRandomVariableParams(lambda, alpha);
+		m_states[i].setRandomVariableParams(m_lambdaI[i], alpha);
 	}
 }
 
