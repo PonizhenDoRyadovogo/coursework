@@ -132,6 +132,8 @@ std::vector<double> Model::simulation(const double end_time, double begin_time)
 	std::vector<double> result_vector;
 	result_vector.push_back(begin_time);
 	int initial_state = _lotteryInitialState();
+	//add a counter that counts the number of stays in the state
+	m_states[initial_state].m_count++;
 	NumberRV number_RV = NumberRV::First;
 	double tao = _timeSpentState(initial_state, number_RV);
 	begin_time = begin_time + tao;
@@ -141,6 +143,8 @@ std::vector<double> Model::simulation(const double end_time, double begin_time)
 	{
 		current_state = _lotteryState(current_state, number_RV);
 		assert(current_state != INT_MAX);
+		//add a counter that counts the number of stays in the state
+		m_states[current_state].m_count++;
 		tao = _timeSpentState(current_state, number_RV);
 		begin_time = begin_time + tao;
 		if (begin_time <= end_time)
@@ -149,6 +153,13 @@ std::vector<double> Model::simulation(const double end_time, double begin_time)
 		}
 	}
 	return result_vector;
+}
+
+int Model::numberStaysInIthState(int state_id) const
+{
+	ASSERT_MSG(state_id >= 0, "The state number cannot be negative!");
+	ASSERT_MSG(state_id < m_states.size(), "The state number is greater than the number of states");
+	return m_states[state_id].m_count;
 }
 
 int State::getId() const

@@ -39,6 +39,7 @@ protected:
 	int m_id;
 	std::vector<std::pair<double, double>> m_transitionProbabilities;
 	RandomVariableParametrs m_paramsRV;
+	int m_count = 0;
 };
 
 class Model {
@@ -50,6 +51,7 @@ public:
 	void inputTransitionProbability();
 	void print() const;
 	std::vector<double> simulation(const double end_time, double begin_time = 0.0);
+	int numberStaysInIthState(int state_id) const;
 private:
 	int _lotteryInitialState() const;
 	double _timeSpentState(const int state, NumberRV& number_RV);
