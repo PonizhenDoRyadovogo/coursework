@@ -52,6 +52,7 @@ public:
 	void print() const;
 	std::vector<double> simulation(const double end_time, double begin_time = 0.0);
 	int numberStaysInIthState(int state_id) const;
+	void readingTransitionProbabilityFromFiles(const std::string& firstRVProbabilityFile, const std::string& secondRVProbabilityFile);
 private:
 	int _lotteryInitialState() const;
 	double _timeSpentState(const int state, NumberRV& number_RV);

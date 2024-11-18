@@ -162,6 +162,31 @@ int Model::numberStaysInIthState(int state_id) const
 	return m_states[state_id].m_count;
 }
 
+void Model::readingTransitionProbabilityFromFiles(const std::string& firstRVProbabilityFile, const std::string& secondRVProbabilityFile)
+{
+	std::vector<std::vector<double>> matrix1 = readMatrixFromFile(firstRVProbabilityFile);
+	std::vector<std::vector<double>> matrix2 = readMatrixFromFile(secondRVProbabilityFile);
+	
+	double sum_probabilities_firstRV = 0, sum_probabilities_secondRV = 0;
+	double prob1, prob2;
+	for (int i = 0; i < m_number_states; ++i)
+	{
+		sum_probabilities_firstRV = 0;
+		sum_probabilities_secondRV = 0;
+		for (int j = 0; j < m_number_states; ++j)
+		{
+			prob1 = matrix1[i][j];
+			prob2 = matrix2[i][j];
+			ASSERT_MSG(prob1 <= 1 && prob2 <= 1, "The probability cannot be greater than 1!");
+			ASSERT_MSG(prob1 > 0 && prob2 > 0, "The probability cannot be less than zero!");
+			m_states[i].setTransitionProbability(j, prob1, prob2);
+			sum_probabilities_firstRV = sum_probabilities_firstRV + prob1;
+			sum_probabilities_secondRV = sum_probabilities_secondRV + prob2;
+		}
+		ASSERT_MSG(sum_probabilities_firstRV == 1 && sum_probabilities_secondRV == 1, "The sum of the probabilities should be 1!");
+	}
+}
+
 int State::getId() const
 {
 	return m_id;
