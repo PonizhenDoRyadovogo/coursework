@@ -15,28 +15,41 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="8" column="0">
-     <widget class="QLabel" name="labelCountStates">
+    <item row="2" column="1">
+     <widget class="QLabel" name="labelSecondTable">
       <property name="text">
-       <string>Количество состояний:</string>
+       <string>Вероятности переходов по второй случайной величине:</string>
       </property>
      </widget>
     </item>
-    <item row="6" column="0">
+    <item row="3" column="1">
+     <widget class="QTableWidget" name="secondTransitionTable"/>
+    </item>
+    <item row="10" column="0">
+     <widget class="QSpinBox" name="stateSpinBox"/>
+    </item>
+    <item row="1" column="1">
+     <widget class="QTableWidget" name="firstTransitionTable"/>
+    </item>
+    <item row="1" column="0" rowspan="3">
+     <widget class="QGraphicsView" name="graphicsView"/>
+    </item>
+    <item row="7" column="0">
      <widget class="QLabel" name="labelLambds">
       <property name="text">
        <string>Значения случайного процесса и параметры λ для случайной величины:</string>
       </property>
      </widget>
     </item>
-    <item row="7" column="0">
+    <item row="8" column="0">
      <widget class="QLineEdit" name="lambdaInput"/>
     </item>
-    <item row="1" column="1">
-     <widget class="QTableWidget" name="firstTransitionTable"/>
-    </item>
-    <item row="3" column="1">
-     <widget class="QTableWidget" name="secondTransitionTable"/>
+    <item row="9" column="0">
+     <widget class="QLabel" name="labelCountStates">
+      <property name="text">
+       <string>Количество состояний:</string>
+      </property>
+     </widget>
     </item>
     <item row="0" column="1">
      <widget class="QLabel" name="labelFirstTable">
@@ -45,33 +58,30 @@
       </property>
      </widget>
     </item>
-    <item row="9" column="0">
-     <widget class="QSpinBox" name="stateSpinBox"/>
+    <item row="6" column="0">
+     <widget class="QLineEdit" name="alphaInput"/>
     </item>
-    <item row="4" column="0">
+    <item row="6" column="1">
+     <widget class="QDoubleSpinBox" name="timeSpinBox"/>
+    </item>
+    <item row="5" column="1">
+     <widget class="QLabel" name="labelTime">
+      <property name="text">
+       <string>Время работы:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="0">
      <widget class="QLabel" name="labelAplpha">
       <property name="text">
        <string>Параметры α для случайной величины:</string>
       </property>
      </widget>
     </item>
-    <item row="5" column="0">
-     <widget class="QLineEdit" name="alphaInput"/>
-    </item>
-    <item row="1" column="0" rowspan="3">
-     <widget class="QGraphicsView" name="graphicsView"/>
-    </item>
-    <item row="5" column="1">
+    <item row="8" column="1">
      <widget class="QPushButton" name="updateButton">
       <property name="text">
-       <string>Обновить</string>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="1">
-     <widget class="QLabel" name="labelSecondTable">
-      <property name="text">
-       <string>Вероятности переходов по второй случайной величине:</string>
+       <string>Запуск</string>
       </property>
      </widget>
     </item>
