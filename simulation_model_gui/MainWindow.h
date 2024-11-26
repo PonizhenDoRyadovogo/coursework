@@ -24,6 +24,8 @@ private slots:
     void startSimulation();       // Слот для запуска симуляции
     void updateSimulation(); // Добавьте этот слот
 
+protected:
+     void resizeEvent(QResizeEvent *event) override;
 private:
     void drawCoordinateSystem();  // Метод для отрисовки системы координат
     void visualizeSimulation(const std::vector<double>& lambdas, const std::vector<std::vector<double>>& transitions);   // Метод для отображения результатов симуляции
