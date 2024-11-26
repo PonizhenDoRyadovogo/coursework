@@ -4,6 +4,8 @@
 
 int main()
 {
+	Model teat;
+	return -1;
 	int n;
 	std::cout << "Enter number of states: ";
 	std::cin >> n;
