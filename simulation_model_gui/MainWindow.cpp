@@ -173,15 +173,30 @@ void MainWindow::drawCoordinateSystem(const std::vector<double>& lambdas)
     scene->addLine(50, 50, 60, 60); // Линия стрелки вправо
 
     int numLambdas = lambdas.size();
-    double yStep = 250.0 / (numLambdas - 1);
+    // Нахождение минимального и максимального значения лямбды
+    double maxLambda = *std::max_element(lambdas.begin(), lambdas.end());
+    double minLambda = *std::min_element(lambdas.begin(), lambdas.end());
 
-    // Метки для оси oY
+    // Рисуем лямбды на оси OY
     for (int i = 0; i < numLambdas; ++i) {
-        double y = 300 - i * yStep; // Позиция засечки по оси Y
-        scene->addLine(45, y, 55, y);
-        QString lambda_text = QString::number(lambdas[i], 'f', 2);
-        auto *textItem = scene->addText(lambda_text);
-        textItem->setPos(15, y - 10); // Текст слева от засечки
+        // Нормализуем значение лямбды, чтобы оно соотносилось с диапазоном по оси Y
+        // Лямбда, которая максимальна, будет на 50 пикселей (верхний предел оси Y)
+        double normalizedY = 300 - (lambdas[i] - minLambda) / (maxLambda - minLambda) * 250.0;
+        if (i == 0) {
+        // Если это максимальная лямбда, смещаем её немного вниз
+        normalizedY += 10;  // Немного ниже
+        }
+        if (i == numLambdas - 1) {
+        // Если это минимальная лямбда, смещаем её немного вверх
+        normalizedY -= 10;  // Немного выше
+        }
+        // Рисуем засечку
+        scene->addLine(45, normalizedY, 55, normalizedY); // Засечка оси
+
+        // Отображаем лямбду как текст
+        QString lambda_text = QString::number(lambdas[i], 'f', 2); // Лямбда с 2 знаками после запятой
+        auto* textItem = scene->addText(lambda_text);
+        textItem->setPos(15, normalizedY - 10); // Текст слева от засечки
     }
 }
 
