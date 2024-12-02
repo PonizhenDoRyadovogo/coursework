@@ -53,6 +53,7 @@ void MainWindow::updateSimulation() {
 
     // Getting parameters
     int states = ui->stateSpinBox->value();
+    double end_time = ui->timeSpinBox->value();
     QStringList lambda_list = ui->lambdaInput->text().split(",");
     QStringList alpha_list = ui->alphaInput->text().split(",");
 
@@ -110,7 +111,7 @@ void MainWindow::updateSimulation() {
         }
     }
 
-    drawCoordinateSystem(lambdas);
+    drawCoordinateSystem(lambdas, end_time);
     visualizeSimulation(lambdas, alphas, first_transitions, second_transitions);
 }
 
@@ -127,12 +128,12 @@ void MainWindow::drawCoordinateSystem() {
     scene->addLine(50, 300, 50, 50);  // Ось лямбд (oY)
 
     // Добавляем стрелку на конце оси OX
-    scene->addLine(550, 300, 540, 290); // Линия стрелки вниз
-    scene->addLine(550, 300, 540, 310); // Линия стрелки вверх
+    scene->addLine(550, 300, 540, 298); // Линия стрелки вниз
+    scene->addLine(550, 300, 540, 302); // Линия стрелки вверх
 
     // Добавляем стрелку на конце оси OY
-    scene->addLine(50, 50, 40, 60); // Линия стрелки влево
-    scene->addLine(50, 50, 60, 60); // Линия стрелки вправо
+    scene->addLine(50, 50, 48, 60); // Линия стрелки влево
+    scene->addLine(50, 50, 52, 60); // Линия стрелки вправо
 
     // Метки для оси oX
     for (int i = 0; i <= 10; ++i) {
@@ -157,7 +158,7 @@ void MainWindow::drawCoordinateSystem() {
     }
 }
 
-void MainWindow::drawCoordinateSystem(const std::vector<double>& lambdas)
+void MainWindow::drawCoordinateSystem(const std::vector<double>& lambdas, const double end_time)
 {
     scene->setSceneRect(0, 0, 600, 400);
 
@@ -165,12 +166,15 @@ void MainWindow::drawCoordinateSystem(const std::vector<double>& lambdas)
     scene->addLine(50, 300, 50, 50);  // Ось лямбд (oY)
 
     // Добавляем стрелку на конце оси OX
-    scene->addLine(550, 300, 540, 290); // Линия стрелки вниз
-    scene->addLine(550, 300, 540, 310); // Линия стрелки вверх
+    scene->addLine(550, 300, 540, 298); // Линия стрелки вниз
+    scene->addLine(550, 300, 540, 302); // Линия стрелки вверх
 
     // Добавляем стрелку на конце оси OY
-    scene->addLine(50, 50, 40, 60); // Линия стрелки влево
-    scene->addLine(50, 50, 60, 60); // Линия стрелки вправо
+    scene->addLine(50, 50, 48, 60); // Линия стрелки влево
+    scene->addLine(50, 50, 52, 60); // Линия стрелки вправо
+
+    auto *origin_coordinate = scene->addText(QString::number(0));
+    origin_coordinate->setPos(35, 305);
 
     int numLambdas = lambdas.size();
     // Нахождение минимального и максимального значения лямбды
@@ -184,7 +188,7 @@ void MainWindow::drawCoordinateSystem(const std::vector<double>& lambdas)
         double normalizedY = 300 - (lambdas[i] - minLambda) / (maxLambda - minLambda) * 250.0;
         if (i == 0) {
         // Если это максимальная лямбда, смещаем её немного вниз
-        normalizedY += 10;  // Немного ниже
+        normalizedY += 15;  // Немного ниже
         }
         if (i == numLambdas - 1) {
         // Если это минимальная лямбда, смещаем её немного вверх
@@ -194,10 +198,17 @@ void MainWindow::drawCoordinateSystem(const std::vector<double>& lambdas)
         scene->addLine(45, normalizedY, 55, normalizedY); // Засечка оси
 
         // Отображаем лямбду как текст
-        QString lambda_text = QString::number(lambdas[i], 'f', 2); // Лямбда с 2 знаками после запятой
+        QString lambda_text = QString("λ%1 = %2").arg(i + 1).arg(lambdas[i], 0, 'f', 2); // Лямбда с 2 знаками после запятой
         auto* textItem = scene->addText(lambda_text);
-        textItem->setPos(15, normalizedY - 10); // Текст слева от засечки
+        textItem->setScale(0.75);
+        textItem->setPos(0, normalizedY - 10); // Текст слева от засечки
     }
+
+    // Отображаем время
+    scene->addLine(535, 295, 535, 305);
+    QString time_text = QString::number(end_time, 'f', 2);
+    auto* textItem = scene->addText(time_text);
+    textItem->setPos(525, 305);
 }
 
 void MainWindow::visualizeSimulation(const std::vector<double>& lambdas, const std::vector<double>& alphas,const std::vector<std::vector<double>>& firstTransitions, const std::vector<std::vector<double>>& secondTransitions) {
