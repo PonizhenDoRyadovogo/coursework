@@ -9,10 +9,14 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    ../simulation_model/simulation_model/simulation_model.cpp \
+    ../simulation_model/simulation_model/support_function.cpp \
     MainWindow.cpp \
     QTmain.cpp
 
 HEADERS += \
+    ../simulation_model/simulation_model/simulation_model.h \
+    ../simulation_model/simulation_model/support_function.h \
     MainWindow.h
 
 FORMS += \

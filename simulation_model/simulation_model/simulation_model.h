@@ -44,8 +44,8 @@ protected:
 
 class Model {
 public:
-	//ToDo: Model();
-	Model(int n, std::vector<int>& lambdaI);
+    Model() = default;
+    Model(int n, std::vector<double>& lambdaI);
 	int getNumberStates() const;
 	void inputRandomVariableParams();
 	void inputTransitionProbability();
@@ -58,7 +58,7 @@ private:
 	double _timeSpentState(const int state, NumberRV& number_RV);
 	int _lotteryState(int from_state, NumberRV& number_rv) const;
 private:
-	std::vector<int> m_lambdaI;
+    std::vector<double> m_lambdaI;
 	std::vector<State> m_states;
 	int m_number_states = 2;
 };

@@ -4,7 +4,7 @@
 #include <QTimer>
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::MainWindow), scene(new QGraphicsScene(this)) {
+    : QMainWindow(parent), ui(new Ui::MainWindow), scene(new QGraphicsScene(this)), m_model(new Model){
     ui->setupUi(this);
 
     if (!statusBar()) {
@@ -84,6 +84,11 @@ void MainWindow::updateSimulation() {
     for (int i = 0; i < states; ++i) {
         for (int j = 0; j < states; ++j) {
             first_transitions[i][j] = ui->firstTransitionTable->item(i, j)->text().toDouble();
+            if(first_transitions[i][j] == 0.0)
+            {
+                statusBar()->showMessage("Ошибка: Проверьте ввод вероятностей!");
+                return;
+            }
         }
     }
 
@@ -92,6 +97,11 @@ void MainWindow::updateSimulation() {
     for (int i = 0; i < states; ++i) {
         for (int j = 0; j < states; ++j) {
             second_transitions[i][j] = ui->secondTransitionTable->item(i, j)->text().toDouble();
+            if(second_transitions[i][j] == 0.0)
+            {
+                statusBar()->showMessage("Ошибка: Проверьте ввод вероятностей!");
+                return;
+            }
         }
     }
 
@@ -211,18 +221,11 @@ void MainWindow::drawCoordinateSystem(const std::vector<double>& lambdas, const 
     textItem->setPos(525, 305);
 }
 
-void MainWindow::visualizeSimulation(const std::vector<double>& lambdas, const std::vector<double>& alphas,const std::vector<std::vector<double>>& firstTransitions, const std::vector<std::vector<double>>& secondTransitions) {
-    // Убедимся, что лямбды отображаются в первой четверти
-//    for (size_t i = 0; i < lambdas.size(); ++i) {
-//        // Текст для отображения лямбд
-//        QString lambdaText = QString("λ%1 = %2").arg(i + 1).arg(lambdas[i], 0, 'f', 2); // 2 знака после запятой
-//        auto *textItem = scene->addText(lambdaText);
+void MainWindow::visualizeSimulation(std::vector<double>& lambdas, const std::vector<double>& alphas,const std::vector<std::vector<double>>& firstTransitions, const std::vector<std::vector<double>>& secondTransitions) {
+    delete m_model;
 
-//        // Позиционируем текст
-//        int xPosition = 5;                  // Небольшой отступ от оси Y
-//        int yPosition = 300 - i * 50 - 20;  // Смещение вверх от метки оси Y
-//        textItem->setPos(xPosition, yPosition);
-//    }
+    int states = ui->stateSpinBox->value();
+    m_model = new Model(states, lambdas);
 
     // Добавьте визуализацию переходов между состояниями
 //    for (size_t i = 0; i < transitions.size(); ++i) {

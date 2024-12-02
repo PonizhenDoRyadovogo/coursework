@@ -9,6 +9,8 @@
 #include <QSpinBox>
 #include <QStatusBar>
 
+#include "../simulation_model/simulation_model/simulation_model.h"
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -28,7 +30,7 @@ protected:
      void resizeEvent(QResizeEvent *event) override;
 private:
     void drawCoordinateSystem();  // Метод для отрисовки системы координат
-    void visualizeSimulation(const std::vector<double>& lambdas, const std::vector<double>& alphas,const std::vector<std::vector<double>>& firstTransitions, const std::vector<std::vector<double>>& secondTransitions);   // Метод для отображения результатов симуляции
+    void visualizeSimulation(std::vector<double>& lambdas, const std::vector<double>& alphas,const std::vector<std::vector<double>>& firstTransitions, const std::vector<std::vector<double>>& secondTransitions);   // Метод для отображения результатов симуляции
     void drawCoordinateSystem(const std::vector<double>& lambdas, const double end_time);
 private:
     Ui::MainWindow *ui;           // Указатель на автоматически сгенерированный интерфейс
@@ -38,6 +40,7 @@ private:
     QLineEdit *lambdaInput;       // Поле для ввода лямбд
     QLineEdit *alphaInput;        // Поле для ввода параметров альфа
     QTableWidget *transitionTable;// Таблица для ввода вероятностей переходов
+    Model* m_model = nullptr;
 };
 
 #endif // MAINWINDOW_H

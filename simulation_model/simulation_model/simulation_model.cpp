@@ -1,5 +1,6 @@
 #include <cassert>
 #include <cmath>
+#include<algorithm>
 
 #include "simulation_model.h"
 
@@ -12,7 +13,7 @@
     } while (false)
 
 //here, lambdas make sense of parameters for random variables, as well as the state of a random process
-Model::Model(int n, std::vector<int> &lambdaI)
+Model::Model(int n, std::vector<double> &lambdaI)
 {
 	ASSERT_MSG(n > 0, "The number of states must be greater than 0!");
 	ASSERT_MSG(n == lambdaI.size(), "The number of states does not match the number of values of a random process!");
