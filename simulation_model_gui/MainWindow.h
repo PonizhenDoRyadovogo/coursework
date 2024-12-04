@@ -30,7 +30,7 @@ protected:
      void resizeEvent(QResizeEvent *event) override;
 private:
     void drawCoordinateSystem();  // Метод для отрисовки системы координат
-    void visualizeSimulation(std::vector<double>& lambdas, const std::vector<double>& alphas,const std::vector<std::vector<double>>& firstTransitions, const std::vector<std::vector<double>>& secondTransitions);   // Метод для отображения результатов симуляции
+    void visualizeSimulation(std::vector<double>& lambdas, std::vector<double>& alphas,const std::vector<std::vector<double>>& firstTransitions, const std::vector<std::vector<double>>& secondTransitions);   // Метод для отображения результатов симуляции
     void drawCoordinateSystem(const std::vector<double>& lambdas, const double end_time);
 private:
     Ui::MainWindow *ui;           // Указатель на автоматически сгенерированный интерфейс

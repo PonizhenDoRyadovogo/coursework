@@ -4,13 +4,11 @@
 
 int main()
 {
-	Model teat;
-	return -1;
 	int n;
 	std::cout << "Enter number of states: ";
 	std::cin >> n;
 	std::cout << std::endl;
-	std::vector<int> lambds = { 3, 2, 8, 4};
+	std::vector <double> lambds = { 3, 2, 8, 4 };
 	Model model(n, lambds);
 	//model.inputTransitionProbability();
 	model.readingTransitionProbabilityFromFiles("first.txt", "second.txt");

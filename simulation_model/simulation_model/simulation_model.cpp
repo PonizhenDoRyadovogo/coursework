@@ -99,8 +99,9 @@ double Model::_timeSpentState(const int state, NumberRV& number_RV)
 	double tao2 = -(std::log(1 - second_random_number) / m_states[state].m_paramsRV.alpha);
 	//3 step
 	double tao = std::min(tao1, tao2);
-	number_RV = (tao == tao1) ? NumberRV::First : NumberRV::Second;
-	return tao;
+    number_RV = (tao == tao1) ? NumberRV::First : NumberRV::Second;
+    //round to 2 decimal places
+    return (std::round(tao * 100.0) / 100.0);
 }
 
 int Model::_lotteryState(int from_state, NumberRV& number_rv) const
@@ -186,6 +187,33 @@ void Model::readingTransitionProbabilityFromFiles(const std::string& firstRVProb
 		}
 		ASSERT_MSG(sum_probabilities_firstRV == 1 && sum_probabilities_secondRV == 1, "The sum of the probabilities should be 1!");
 	}
+}
+
+void Model::setParamsRandomVariable(std::vector<double>& alphas)
+{
+    for (int i = 0; i < m_states.size(); ++i)
+    {
+        m_states[i].setRandomVariableParams(m_lambdaI[i], alphas[i]);
+    }
+}
+
+void Model::setTransitionProbabilities(const std::vector<std::vector<double>>& first_transitions, const std::vector<std::vector<double>>& second_transitions)
+{
+    double sum_probabilities_firstRV = 0, sum_probabilities_secondRV = 0;
+    for (int i = 0; i < m_states.size(); ++i)
+    {
+        sum_probabilities_firstRV = 0;
+        sum_probabilities_secondRV = 0;
+        for (int j = 0; j < m_states.size(); ++j)
+        {
+            ASSERT_MSG(first_transitions[i][j] <= 1 && second_transitions[i][j] <= 1, "The probability cannot be greater than 1!");
+            ASSERT_MSG(first_transitions[i][j] > 0 && second_transitions[i][j] > 0, "The probability cannot be less than zero!");
+            m_states[i].setTransitionProbability(j, first_transitions[i][j], second_transitions[i][j]);
+            sum_probabilities_firstRV = sum_probabilities_firstRV + first_transitions[i][j];
+            sum_probabilities_secondRV = sum_probabilities_secondRV + second_transitions[i][j];
+        }
+        ASSERT_MSG(sum_probabilities_firstRV == 1 && sum_probabilities_secondRV == 1, "The sum of the probabilities should be 1!");
+    }
 }
 
 int State::getId() const

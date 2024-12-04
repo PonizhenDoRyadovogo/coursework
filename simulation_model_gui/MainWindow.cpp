@@ -221,11 +221,55 @@ void MainWindow::drawCoordinateSystem(const std::vector<double>& lambdas, const 
     textItem->setPos(525, 305);
 }
 
-void MainWindow::visualizeSimulation(std::vector<double>& lambdas, const std::vector<double>& alphas,const std::vector<std::vector<double>>& firstTransitions, const std::vector<std::vector<double>>& secondTransitions) {
+void MainWindow::visualizeSimulation(std::vector<double>& lambdas, std::vector<double>& alphas, const std::vector<std::vector<double>>& firstTransitions, const std::vector<std::vector<double>>& secondTransitions) {
     delete m_model;
 
+    double begin_time = 0.0;
     int states = ui->stateSpinBox->value();
+    int end_time = ui->timeSpinBox->value();
     m_model = new Model(states, lambdas);
+    m_model->setParamsRandomVariable(alphas);
+    m_model->setTransitionProbabilities(firstTransitions, secondTransitions);
+
+    std::vector<double> result_vector;
+    result_vector.push_back(begin_time);
+    int initial_state = m_model->_lotteryInitialState();
+    m_model->m_states[initial_state].m_count++;
+    NumberRV number_RV = NumberRV::First;
+    double tao = m_model->_timeSpentState(initial_state, number_RV);
+    begin_time = begin_time + tao;
+    result_vector.push_back(begin_time);
+    int current_state = initial_state;
+    while (begin_time <= end_time)
+    {
+        current_state = m_model->_lotteryState(current_state, number_RV);
+        assert(current_state != INT_MAX);
+        //add a counter that counts the number of stays in the state
+        m_model->m_states[current_state].m_count++;
+        tao = m_model->_timeSpentState(current_state, number_RV);
+        begin_time = begin_time + tao;
+        if (begin_time <= end_time)
+        {
+        result_vector.push_back(begin_time);
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     // Добавьте визуализацию переходов между состояниями
 //    for (size_t i = 0; i < transitions.size(); ++i) {
