@@ -1,6 +1,7 @@
 #include <cassert>
 #include <cmath>
-#include<algorithm>
+#include <algorithm>
+#include <chrono>
 
 #include "simulation_model.h"
 
@@ -108,7 +109,7 @@ int Model::_lotteryState(int from_state, NumberRV& number_rv) const
 {
 	double sum = 0;
 	std::random_device rd;
-	std::mt19937 gen(rd());
+    std::mt19937 gen(std::chrono::system_clock::now().time_since_epoch().count());
 	std::uniform_int_distribution<> dist(0, 100);
 	double random_number = dist(gen) / 100.0;
 	for (int i = 0; i < m_number_states; ++i)

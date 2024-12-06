@@ -206,7 +206,7 @@ void MainWindow::drawCoordinateSystem(const std::vector<double>& lambdas, const 
         }
         // Рисуем засечку
         scene->addLine(45, normalizedY, 55, normalizedY); // Засечка оси
-
+        m_coordinateY.push_back(normalizedY);
         // Отображаем лямбду как текст
         QString lambda_text = QString("λ%1 = %2").arg(i + 1).arg(lambdas[i], 0, 'f', 2); // Лямбда с 2 знаками после запятой
         auto* textItem = scene->addText(lambda_text);
@@ -218,7 +218,9 @@ void MainWindow::drawCoordinateSystem(const std::vector<double>& lambdas, const 
     scene->addLine(535, 295, 535, 305);
     QString time_text = QString::number(end_time, 'f', 2);
     auto* textItem = scene->addText(time_text);
-    textItem->setPos(525, 305);
+    textItem->setScale(0.5);
+    textItem->setPos(540, 310);
+    textItem->setDefaultTextColor(Qt::red);
 }
 
 void MainWindow::visualizeSimulation(std::vector<double>& lambdas, std::vector<double>& alphas, const std::vector<std::vector<double>>& firstTransitions, const std::vector<std::vector<double>>& secondTransitions) {
@@ -226,10 +228,12 @@ void MainWindow::visualizeSimulation(std::vector<double>& lambdas, std::vector<d
 
     double begin_time = 0.0;
     int states = ui->stateSpinBox->value();
-    int end_time = ui->timeSpinBox->value();
+    double end_time = ui->timeSpinBox->value();
     m_model = new Model(states, lambdas);
     m_model->setParamsRandomVariable(alphas);
     m_model->setTransitionProbabilities(firstTransitions, secondTransitions);
+
+    double max_time = end_time;
 
     std::vector<double> result_vector;
     result_vector.push_back(begin_time);
@@ -239,7 +243,22 @@ void MainWindow::visualizeSimulation(std::vector<double>& lambdas, std::vector<d
     double tao = m_model->_timeSpentState(initial_state, number_RV);
     begin_time = begin_time + tao;
     result_vector.push_back(begin_time);
+
+    //rendering the initial iteration
+    double old_normalizedX = (tao / max_time) * (500.0 - 15.0) + 50;
+    scene->addLine(old_normalizedX, 295, old_normalizedX, 305);
+    auto* textItem = scene->addText(QString::number(tao));
+    textItem->setPos(old_normalizedX - 15, 310);
+    textItem->setScale(0.5);
+    scene->addLine(50, m_coordinateY[initial_state], old_normalizedX, m_coordinateY[initial_state]);
+
+    //displaying dotted lines
+    QPen pen;
+    pen.setStyle(Qt::DashLine);
+    scene->addLine(old_normalizedX, m_coordinateY[initial_state], old_normalizedX, 300, pen);
+
     int current_state = initial_state;
+    int i = 0;
     while (begin_time <= end_time)
     {
         current_state = m_model->_lotteryState(current_state, number_RV);
@@ -247,17 +266,29 @@ void MainWindow::visualizeSimulation(std::vector<double>& lambdas, std::vector<d
         //add a counter that counts the number of stays in the state
         m_model->m_states[current_state].m_count++;
         tao = m_model->_timeSpentState(current_state, number_RV);
+
         begin_time = begin_time + tao;
         if (begin_time <= end_time)
         {
-        result_vector.push_back(begin_time);
+            result_vector.push_back(begin_time);
+            double new_normalizedX = (begin_time / max_time) * (500.0 - 15.0) + 50;
+            scene->addLine(new_normalizedX, 295, new_normalizedX, 305);
+            auto* textItem = scene->addText(QString::number(begin_time));
+            textItem->setPos(new_normalizedX - 10, 310 + i);
+            textItem->setScale(0.5);
+            scene->addLine(old_normalizedX, m_coordinateY[current_state], new_normalizedX, m_coordinateY[current_state]);
+            scene->addLine(new_normalizedX, m_coordinateY[current_state], new_normalizedX, 300, pen);
+            old_normalizedX = new_normalizedX;
+            if(!i)
+            {
+                i = 5;
+            }
+            else
+            {
+                i = 0;
+            }
         }
     }
-
-
-
-
-
 
 
 

@@ -36,6 +36,7 @@ private:
     Ui::MainWindow *ui;           // Указатель на автоматически сгенерированный интерфейс
     QGraphicsScene *scene;        // Графическая сцена для визуализации
 
+    std::vector<double> m_coordinateY;
     QSpinBox *stateSpinBox;       // Поле для выбора количества состояний
     QLineEdit *lambdaInput;       // Поле для ввода лямбд
     QLineEdit *alphaInput;        // Поле для ввода параметров альфа
