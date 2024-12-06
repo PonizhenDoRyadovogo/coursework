@@ -215,7 +215,9 @@ void MainWindow::drawCoordinateSystem(const std::vector<double>& lambdas, const 
     }
 
     // Отображаем время
-    scene->addLine(535, 295, 535, 305);
+    QPen pen;
+    pen.setColor(Qt::red);
+    scene->addLine(535, 295, 535, 305, pen);
     QString time_text = QString::number(end_time, 'f', 2);
     auto* textItem = scene->addText(time_text);
     textItem->setScale(0.5);
