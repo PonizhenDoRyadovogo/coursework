@@ -16,7 +16,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->graphicsView->setScene(scene);
     ui->graphicsView->setRenderHint(QPainter::Antialiasing); // To smooth the lines
-    scene->setSceneRect(0, 0, 600, 400);
+    scene->setSceneRect(0, 0, 1700, 900);
 
     // Draw the initial coordinate system
     drawCoordinateSystem();
@@ -131,15 +131,15 @@ void MainWindow::startSimulation() {
 }
 
 void MainWindow::drawCoordinateSystem() {
-    scene->setSceneRect(0, 0, 600, 400); // Установите фиксированные границы сцены
+    scene->setSceneRect(0, 0, 1700, 900); // Установите фиксированные границы сцены
 
     // Рисуем оси
-    scene->addLine(50, 300, 550, 300); // Ось времени (oX)
-    scene->addLine(50, 300, 50, 50);  // Ось лямбд (oY)
+    scene->addLine(50, 800, 1600, 800); // Ось времени (oX)
+    scene->addLine(50, 800, 50, 50);  // Ось лямбд (oY)
 
     // Добавляем стрелку на конце оси OX
-    scene->addLine(550, 300, 540, 298); // Линия стрелки вниз
-    scene->addLine(550, 300, 540, 302); // Линия стрелки вверх
+    scene->addLine(1600, 800, 1596, 798); // Линия стрелки вниз
+    scene->addLine(1600, 800, 1596, 802); // Линия стрелки вверх
 
     // Добавляем стрелку на конце оси OY
     scene->addLine(50, 50, 48, 60); // Линия стрелки влево
@@ -147,22 +147,16 @@ void MainWindow::drawCoordinateSystem() {
 
     // Метки для оси oX
     for (int i = 0; i <= 10; ++i) {
-        int x = 50 + i * 50;
-        if(i != 10)
-        {
-        scene->addLine(x, 295, x, 305);
-        }
+        int x = 50 + i * 150;
+        scene->addLine(x, 803, x, 797);
         auto *textItem = scene->addText(QString::number(i));
-        textItem->setPos(x - 10, 310); // Текст под засечкой
+        textItem->setPos(x - 10, 810); // Текст под засечкой
     }
 
     // Метки для оси oY
     for (int i = 1; i <= 5; ++i) {
-        int y = 300 - i * 50; // Позиция засечки по оси Y
-        if(i != 5)
-        {
+        int y = 800 - i * 140; // Позиция засечки по оси Y
         scene->addLine(45, y, 55, y); // Засечка
-        }
         auto *textItem = scene->addText(QString::number(i));
         textItem->setPos(15, y - 10); // Текст слева от засечки
     }
@@ -170,58 +164,83 @@ void MainWindow::drawCoordinateSystem() {
 
 void MainWindow::drawCoordinateSystem(const std::vector<double>& lambdas, const double end_time)
 {
-    scene->setSceneRect(0, 0, 600, 400);
+    scene->setSceneRect(0, 0, 1700, 900);
 
-    scene->addLine(50, 300, 550, 300); // Ось времени (oX)
-    scene->addLine(50, 300, 50, 50);  // Ось лямбд (oY)
+    // Рисуем оси
+    scene->addLine(50, 800, 1600, 800); // Ось времени (oX)
+    scene->addLine(50, 800, 50, 50);  // Ось лямбд (oY)
 
     // Добавляем стрелку на конце оси OX
-    scene->addLine(550, 300, 540, 298); // Линия стрелки вниз
-    scene->addLine(550, 300, 540, 302); // Линия стрелки вверх
+    scene->addLine(1600, 800, 1596, 798); // Линия стрелки вниз
+    scene->addLine(1600, 800, 1596, 802); // Линия стрелки вверх
 
     // Добавляем стрелку на конце оси OY
     scene->addLine(50, 50, 48, 60); // Линия стрелки влево
     scene->addLine(50, 50, 52, 60); // Линия стрелки вправо
 
     auto *origin_coordinate = scene->addText(QString::number(0));
-    origin_coordinate->setPos(35, 305);
+    origin_coordinate->setPos(35, 805);
 
     int numLambdas = lambdas.size();
     // Нахождение минимального и максимального значения лямбды
     double maxLambda = *std::max_element(lambdas.begin(), lambdas.end());
     double minLambda = *std::min_element(lambdas.begin(), lambdas.end());
 
-    // Рисуем лямбды на оси OY
-    for (int i = 0; i < numLambdas; ++i) {
-        // Нормализуем значение лямбды, чтобы оно соотносилось с диапазоном по оси Y
-        // Лямбда, которая максимальна, будет на 50 пикселей (верхний предел оси Y)
-        double normalizedY = 300 - (lambdas[i] - minLambda) / (maxLambda - minLambda) * 250.0;
-        if (i == 0) {
-        // Если это максимальная лямбда, смещаем её немного вниз
-        normalizedY += 15;  // Немного ниже
-        }
-        if (i == numLambdas - 1) {
-        // Если это минимальная лямбда, смещаем её немного вверх
-        normalizedY -= 10;  // Немного выше
-        }
-        // Рисуем засечку
-        scene->addLine(48, normalizedY, 52, normalizedY); // Засечка оси
-        m_coordinateY.push_back(normalizedY);
-        // Отображаем лямбду как текст
-        QString lambda_text = QString("λ%1 = %2").arg(i + 1).arg(lambdas[i], 0, 'f', 2); // Лямбда с 2 знаками после запятой
+    if (numLambdas == 2)
+    {
+        QFont font;
+        font.setBold(true);
+        scene->addLine(48, 200, 52, 200);
+        m_coordinateY.push_back(200);
+        QString lambda_text = QString("λ%1 = %2").arg(1).arg(lambdas[0], 0, 'f', 2); // Лямбда с 2 знаками после запятой
         auto* textItem = scene->addText(lambda_text);
-        textItem->setScale(0.75);
-        textItem->setPos(0, normalizedY - 10); // Текст слева от засечки
-    }
+        textItem->setScale(0.9);
+        textItem->setFont(font);
+        textItem->setPos(0, 200 - 10); // Текст слева от засечки
 
+        scene->addLine(48, 650, 52, 650);
+        m_coordinateY.push_back(650);
+        lambda_text = QString("λ%1 = %2").arg(2).arg(lambdas[1], 0, 'f', 2); // Лямбда с 2 знаками после запятой
+        textItem = scene->addText(lambda_text);
+        textItem->setScale(0.9);
+        textItem->setFont(font);
+        textItem->setPos(0, 650 - 10); // Текст слева от засечки
+    }
+    else
+    {
+        for (int i = 0; i < numLambdas; ++i) {
+            // Нормализуем значение лямбды, чтобы оно соотносилось с диапазоном по оси Y
+            // Лямбда, которая максимальна, будет на 50 пикселей (верхний предел оси Y)
+            double normalizedY = 800 - (lambdas[i] - minLambda) / (maxLambda - minLambda) * 750.0;
+            if (i == 0) {
+                // Если это максимальная лямбда, смещаем её немного вниз
+                normalizedY += 15;  // Немного ниже
+            }
+            else if (i == numLambdas - 1) {
+                // Если это минимальная лямбда, смещаем её немного вверх
+                normalizedY -= 25;  // Немного выше
+            }
+            // Рисуем засечку
+            scene->addLine(48, normalizedY, 52, normalizedY); // Засечка оси
+            m_coordinateY.push_back(normalizedY);
+            // Отображаем лямбду как текст
+            QString lambda_text = QString("λ%1 = %2").arg(i + 1).arg(lambdas[i], 0, 'f', 2); // Лямбда с 2 знаками после запятой
+            auto* textItem = scene->addText(lambda_text);
+            QFont font;
+            font.setBold(true);
+            textItem->setScale(0.85);
+            textItem->setFont(font);
+            textItem->setPos(0, normalizedY - 10); // Текст слева от засечки
+        }
+    }
     // Отображаем время
     QPen pen;
     pen.setColor(Qt::red);
-    scene->addLine(535, 295, 535, 305, pen);
-    QString time_text = QString::number(end_time, 'f', 2);
+    scene->addLine(1550, 798, 1550, 802, pen);
+    QString time_text = "end_time " + QString::number(end_time, 'f', 2);
     auto* textItem = scene->addText(time_text);
-    textItem->setScale(0.5);
-    textItem->setPos(540, 310);
+    //textItem->setScale(0.5);
+    textItem->setPos(1550, 780);
     textItem->setDefaultTextColor(Qt::red);
 }
 
@@ -247,20 +266,21 @@ void MainWindow::visualizeSimulation(std::vector<double>& lambdas, std::vector<d
     result_vector.push_back(begin_time);
 
     //rendering the initial iteration
-    double old_normalizedX = (tao / max_time) * (500.0 - 15.0) + 50;
-    scene->addLine(old_normalizedX, 295, old_normalizedX, 305);
+    double old_normalizedX = (tao / max_time) * (1550.0 - 50.0) + 50;
+    scene->addLine(old_normalizedX, 798, old_normalizedX, 802);
     auto* textItem = scene->addText(QString::number(tao));
-    textItem->setPos(old_normalizedX - 15, 310);
-    textItem->setScale(0.5);
+    textItem->setPos(old_normalizedX - 15, 810);
+    //textItem->setScale(0.5);
     scene->addLine(50, m_coordinateY[initial_state], old_normalizedX, m_coordinateY[initial_state]);
 
     //displaying dotted lines
     QPen pen;
     pen.setStyle(Qt::DashLine);
-    scene->addLine(old_normalizedX, m_coordinateY[initial_state], old_normalizedX, 300, pen);
+    scene->addLine(old_normalizedX, m_coordinateY[initial_state], old_normalizedX, 800, pen);
 
     int current_state = initial_state;
     int i = 0;
+    double old_begin_time = begin_time;
     while (begin_time <= end_time)
     {
         current_state = m_model->_lotteryState(current_state, number_RV);
@@ -268,57 +288,33 @@ void MainWindow::visualizeSimulation(std::vector<double>& lambdas, std::vector<d
         //add a counter that counts the number of stays in the state
         m_model->m_states[current_state].m_count++;
         tao = m_model->_timeSpentState(current_state, number_RV);
-
         begin_time = begin_time + tao;
+
         if (begin_time <= end_time)
         {
             result_vector.push_back(begin_time);
-            double new_normalizedX = (begin_time / max_time) * (500.0 - 15.0) + 50;
-            scene->addLine(new_normalizedX, 295, new_normalizedX, 305);
+            double new_normalizedX = (begin_time / max_time) * (1550.0 - 50.0) + 50;
+            scene->addLine(new_normalizedX, 798, new_normalizedX, 802);
             auto* textItem = scene->addText(QString::number(begin_time));
-            textItem->setPos(new_normalizedX - 10, 310 + i);
-            textItem->setScale(0.5);
-            scene->addLine(old_normalizedX, m_coordinateY[current_state], new_normalizedX, m_coordinateY[current_state]);
-            scene->addLine(old_normalizedX, m_coordinateY[current_state], old_normalizedX, 300, pen);
-            old_normalizedX = new_normalizedX;
-            initial_state = current_state;
-            if(!i)
+
+            if(std::abs(old_begin_time - begin_time) < 0.05)
             {
-                i = 5;
+                i += 10;
             }
             else
             {
                 i = 0;
             }
+
+            textItem->setPos(new_normalizedX - 10, 810 + i);
+            //textItem->setScale(0.75);
+            scene->addLine(old_normalizedX, m_coordinateY[current_state], new_normalizedX, m_coordinateY[current_state]);
+            scene->addLine(old_normalizedX, m_coordinateY[current_state], old_normalizedX, 800, pen);
+            old_normalizedX = new_normalizedX;
+            initial_state = current_state;
+            old_begin_time = begin_time;
         }
-        scene->addLine(old_normalizedX, m_coordinateY[initial_state], old_normalizedX, 300, pen);
+        scene->addLine(old_normalizedX, m_coordinateY[initial_state], old_normalizedX, 800, pen);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // Добавьте визуализацию переходов между состояниями
-//    for (size_t i = 0; i < transitions.size(); ++i) {
-//        for (size_t j = 0; j < transitions[i].size(); ++j) {
-//            if (transitions[i][j] > 0) {
-//                // Пример отрисовки стрелки или линии для перехода
-//                int xStart = 50 + i * 50;  // Исходное состояние
-//                int xEnd = 50 + j * 50;    // Конечное состояние
-//                int yLevel = 300 - i * 50;
-
-//                // Добавляем линию или визуализацию перехода
-//                scene->addLine(xStart, yLevel, xEnd, yLevel - 10, QPen(Qt::black));
-//            }
-//        }
-//    }
 }
 
