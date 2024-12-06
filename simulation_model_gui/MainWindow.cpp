@@ -205,7 +205,7 @@ void MainWindow::drawCoordinateSystem(const std::vector<double>& lambdas, const 
         normalizedY -= 10;  // Немного выше
         }
         // Рисуем засечку
-        scene->addLine(45, normalizedY, 55, normalizedY); // Засечка оси
+        scene->addLine(48, normalizedY, 52, normalizedY); // Засечка оси
         m_coordinateY.push_back(normalizedY);
         // Отображаем лямбду как текст
         QString lambda_text = QString("λ%1 = %2").arg(i + 1).arg(lambdas[i], 0, 'f', 2); // Лямбда с 2 знаками после запятой
@@ -277,8 +277,9 @@ void MainWindow::visualizeSimulation(std::vector<double>& lambdas, std::vector<d
             textItem->setPos(new_normalizedX - 10, 310 + i);
             textItem->setScale(0.5);
             scene->addLine(old_normalizedX, m_coordinateY[current_state], new_normalizedX, m_coordinateY[current_state]);
-            scene->addLine(new_normalizedX, m_coordinateY[current_state], new_normalizedX, 300, pen);
+            scene->addLine(old_normalizedX, m_coordinateY[current_state], old_normalizedX, 300, pen);
             old_normalizedX = new_normalizedX;
+            initial_state = current_state;
             if(!i)
             {
                 i = 5;
@@ -288,6 +289,7 @@ void MainWindow::visualizeSimulation(std::vector<double>& lambdas, std::vector<d
                 i = 0;
             }
         }
+        scene->addLine(old_normalizedX, m_coordinateY[initial_state], old_normalizedX, 300, pen);
     }
 
 
