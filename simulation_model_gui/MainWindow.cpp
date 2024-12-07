@@ -50,6 +50,7 @@ void MainWindow::updateTransitionTable() {
 
 void MainWindow::updateSimulation() {
     scene->clear();
+    m_coordinateY.clear();
 
     // Getting parameters
     int states = ui->stateSpinBox->value();
