@@ -1,27 +1,77 @@
 #include <iostream>
+#include <iomanip>
 
 #include "simulation_model.h"
 
 int main()
 {
+	double t = 0.015657;
+	double t2 = 0.984343;
+	double sum = t + t2;
+	std::cout << sum;
+	return 1;
 	int n;
+	double end_time;
 	std::cout << "Enter number of states: ";
 	std::cin >> n;
 	std::cout << std::endl;
-	std::vector <double> lambds = { 3, 2, 8, 4 };
-	Model model(n, lambds);
-	//model.inputTransitionProbability();
-	model.readingTransitionProbabilityFromFiles("first.txt", "second.txt");
-	model.inputRandomVariableParams();
-	std::vector<double> result = model.simulation(5);
-	for (const auto& i : result)
-	{
-		std::cout << i << " ";
-	}
+	std::cout << "Enter end time: ";
+	std::cin >> end_time;
 	std::cout << std::endl;
+	bool b = generationProbabilitiesFiles(n);
+	std::vector <double> lambds;
+	std::vector <double> alphas;
+	std::vector<std::vector<double>> data;
 	for (int i = 0; i < n; ++i)
 	{
-		std::cout << "Number of stays in " << i + 1 << " state: " << model.numberStaysInIthState(i) <<std::endl;
+		std::random_device rd;
+		std::mt19937 gen(rd());
+		std::uniform_real_distribution<> dist(0.0, 100.0);
+		double random_number = dist(gen);
+		lambds.push_back(random_number);
+	}
+	for (int i = 0; i < n; ++i)
+	{
+		std::random_device rd;
+		std::mt19937 gen(rd());
+		std::uniform_real_distribution<> dist(0.0, 100.0);
+		double random_number = dist(gen);
+		alphas.push_back(random_number);
+	}
+	std::vector<double> iteration;
+	for (int i = 0; i < 100; ++i)
+	{
+		iteration.clear();
+		Model* model = new Model(n, lambds);
+		model->readingTransitionProbabilityFromFiles("first.txt", "second.txt");
+		model->setParamsRandomVariable(alphas);
+		model->simulation(end_time);
+		double total_number_iterations = 0.0;
+		for (int i = 0; i < n; ++i)
+		{
+			total_number_iterations += static_cast<double>(model->numberStaysInIthState(i));
+			iteration.push_back(static_cast<double>(model->numberStaysInIthState(i)));
+		}
+		for (int i = 0; i < n; ++i)
+		{
+			iteration[i] /= total_number_iterations;
+		}
+		data.push_back(iteration);
+	}
+	std::vector<double> result;
+	for (int i = 0; i < n; ++i)
+	{
+		double sum = 0.0;
+		for (int j = 0; j < n; ++j)
+		{
+			sum += data[j][i];
+		}
+		sum /= static_cast<double>(n);
+		result.push_back(sum);
+	}
+	for (int i = 0; i < n; ++i)
+	{
+		std::cout << "Среднее время пребвания в " << i + 1 << " состоянии: " << result[i] << std::endl;
 	}
 	return 0;
 }

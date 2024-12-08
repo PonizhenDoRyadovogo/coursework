@@ -126,11 +126,6 @@ void MainWindow::updateSimulation() {
     visualizeSimulation(lambdas, alphas, first_transitions, second_transitions);
 }
 
-void MainWindow::startSimulation() {
-    // Здесь ваша логика для запуска симуляции
-    //ui->statusBar->showMessage("Симуляция запущена!");
-}
-
 void MainWindow::drawCoordinateSystem() {
     scene->setSceneRect(0, 0, 1700, 900); // Установите фиксированные границы сцены
 

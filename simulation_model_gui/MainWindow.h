@@ -23,9 +23,7 @@ public:
     ~MainWindow();
 private slots:
     void updateTransitionTable(); // Слот для обновления таблицы вероятностей переходов
-    void startSimulation();       // Слот для запуска симуляции
-    void updateSimulation(); // Добавьте этот слот
-
+    void updateSimulation();
 protected:
      void resizeEvent(QResizeEvent *event) override;
 private:
@@ -40,7 +38,6 @@ private:
     QSpinBox *stateSpinBox;       // Поле для выбора количества состояний
     QLineEdit *lambdaInput;       // Поле для ввода лямбд
     QLineEdit *alphaInput;        // Поле для ввода параметров альфа
-    QTableWidget *transitionTable;// Таблица для ввода вероятностей переходов
     Model* m_model = nullptr;
 };
 
