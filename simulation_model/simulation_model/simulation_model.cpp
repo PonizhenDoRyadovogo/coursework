@@ -131,7 +131,7 @@ int Model::_lotteryState(int from_state, NumberRV& number_rv) const
 			return i;
 		}
 	}
-	return m_number_states - 1;//is_valid?
+	return m_number_states - 1;
 }
 
 std::vector<double> Model::simulation(const double end_time, double begin_time)
@@ -190,7 +190,7 @@ void Model::readingTransitionProbabilityFromFiles(const std::string& firstRVProb
 			sum_probabilities_firstRV = sum_probabilities_firstRV + prob1;
 			sum_probabilities_secondRV = sum_probabilities_secondRV + prob2;
 		}
-		//ASSERT_MSG(sum_probabilities_firstRV == 1 && sum_probabilities_secondRV == 1, "The sum of the probabilities should be 1!");
+		ASSERT_MSG(sum_probabilities_firstRV == 1 && sum_probabilities_secondRV == 1, "The sum of the probabilities should be 1!");
 	}
 }
 

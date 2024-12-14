@@ -92,18 +92,20 @@ bool generationProbabilitiesFiles(int number_states)
                 new_sum += row[j];
             }
 
+            assert(new_sum == 1.0);
+
             // Записываем данные в файл
             if (fileIndex == 0) {
                 // Записываем в первый файл
                 for (int j = 0; j < numCols; ++j) {
-                    firstFile << std::fixed << std::setprecision(6) << row[j] << " ";
+                    firstFile << row[j] << " ";
                 }
                 firstFile << "\n";
             }
             else {
                 // Записываем во второй файл
                 for (int j = 0; j < numCols; ++j) {
-                    secondFile << std::fixed << std::setprecision(6) << row[j] << " ";
+                    secondFile << row[j] << " ";
                 }
                 secondFile << "\n";
             }

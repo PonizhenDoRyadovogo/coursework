@@ -262,17 +262,19 @@ void MainWindow::visualizeSimulation(std::vector<double>& lambdas, std::vector<d
     result_vector.push_back(begin_time);
 
     //rendering the initial iteration
+    QPen pen_state;//задаем кисть потолще
+    pen_state.setWidth(4);
     double old_normalizedX = (tao / max_time) * (1550.0 - 50.0) + 50;
     scene->addLine(old_normalizedX, 798, old_normalizedX, 802);
     auto* textItem = scene->addText(QString::number(tao));
     textItem->setPos(old_normalizedX - 15, 810);
     //textItem->setScale(0.5);
-    scene->addLine(50, m_coordinateY[initial_state], old_normalizedX, m_coordinateY[initial_state]);
+    scene->addLine(50, m_coordinateY[initial_state], old_normalizedX, m_coordinateY[initial_state], pen_state);
 
     //displaying dotted lines
-    QPen pen;
+    QPen pen;//для вертикальной пуунктирной линии
     pen.setStyle(Qt::DashLine);
-    scene->addLine(old_normalizedX, m_coordinateY[initial_state], old_normalizedX, 800, pen);
+    //scene->addLine(old_normalizedX, m_coordinateY[initial_state], old_normalizedX, 800, pen);
 
     int current_state = initial_state;
     int i = 0;
@@ -304,13 +306,21 @@ void MainWindow::visualizeSimulation(std::vector<double>& lambdas, std::vector<d
 
             textItem->setPos(new_normalizedX - 10, 810 + i);
             //textItem->setScale(0.75);
-            scene->addLine(old_normalizedX, m_coordinateY[current_state], new_normalizedX, m_coordinateY[current_state]);
-            scene->addLine(old_normalizedX, m_coordinateY[current_state], old_normalizedX, 800, pen);
+            scene->addLine(old_normalizedX, m_coordinateY[current_state], new_normalizedX, m_coordinateY[current_state], pen_state);
+            if(initial_state > current_state)
+            {
+                scene->addLine(old_normalizedX, m_coordinateY[current_state], old_normalizedX, 800, pen);
+                //scene->addLine(old_normalizedX, m_coordinateY[initial_state], old_normalizedX, 800, pen);
+            }
+            else if(current_state >= initial_state)
+            {
+                scene->addLine(old_normalizedX, m_coordinateY[initial_state], old_normalizedX, 800, pen);
+            }
             old_normalizedX = new_normalizedX;
             initial_state = current_state;
             old_begin_time = begin_time;
         }
-        scene->addLine(old_normalizedX, m_coordinateY[initial_state], old_normalizedX, 800, pen);
     }
+    scene->addLine(old_normalizedX, m_coordinateY[initial_state], old_normalizedX, 800, pen);//отросовка вертикальной линии у последнего состояния
 }
 
