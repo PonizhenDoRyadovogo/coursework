@@ -232,8 +232,9 @@ void MainWindow::drawCoordinateSystem(const std::vector<double>& lambdas, const 
     // Отображаем время
     QPen pen;
     pen.setColor(Qt::red);
+    pen.setWidth(2);
     scene->addLine(1550, 798, 1550, 802, pen);
-    QString time_text = "end_time " + QString::number(end_time, 'f', 2);
+    QString time_text = "end_time = " + QString::number(end_time, 'f', 2);
     auto* textItem = scene->addText(time_text);
     //textItem->setScale(0.5);
     textItem->setPos(1550, 780);
@@ -265,7 +266,7 @@ void MainWindow::visualizeSimulation(std::vector<double>& lambdas, std::vector<d
     QPen pen_state;//задаем кисть потолще
     pen_state.setWidth(4);
     double old_normalizedX = (tao / max_time) * (1550.0 - 50.0) + 50;
-    scene->addLine(old_normalizedX, 798, old_normalizedX, 802);
+    scene->addEllipse(old_normalizedX - 3, 800 - 3, 6, 6);
     auto* textItem = scene->addText(QString::number(tao));
     textItem->setPos(old_normalizedX - 15, 810);
     //textItem->setScale(0.5);
@@ -292,7 +293,7 @@ void MainWindow::visualizeSimulation(std::vector<double>& lambdas, std::vector<d
         {
             result_vector.push_back(begin_time);
             double new_normalizedX = (begin_time / max_time) * (1550.0 - 50.0) + 50;
-            scene->addLine(new_normalizedX, 798, new_normalizedX, 802);
+            scene->addEllipse(new_normalizedX - 3, 800 - 3, 6, 6);
             auto* textItem = scene->addText(QString::number(begin_time));
 
             if(std::abs(old_begin_time - begin_time) < 0.05)
@@ -310,7 +311,6 @@ void MainWindow::visualizeSimulation(std::vector<double>& lambdas, std::vector<d
             if(initial_state > current_state)
             {
                 scene->addLine(old_normalizedX, m_coordinateY[current_state], old_normalizedX, 800, pen);
-                //scene->addLine(old_normalizedX, m_coordinateY[initial_state], old_normalizedX, 800, pen);
             }
             else if(current_state >= initial_state)
             {
