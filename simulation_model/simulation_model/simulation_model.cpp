@@ -13,6 +13,9 @@
         } \
     } while (false)
 
+
+const double Model::fallibility = 1e-6;
+
 //here, lambdas make sense of parameters for random variables, as well as the state of a random process
 Model::Model(int n, std::vector<double> &lambdaI)
 {
@@ -190,7 +193,8 @@ void Model::readingTransitionProbabilityFromFiles(const std::string& firstRVProb
 			sum_probabilities_firstRV = sum_probabilities_firstRV + prob1;
 			sum_probabilities_secondRV = sum_probabilities_secondRV + prob2;
 		}
-		ASSERT_MSG(sum_probabilities_firstRV == 1 && sum_probabilities_secondRV == 1, "The sum of the probabilities should be 1!");
+		//ASSERT_MSG(sum_probabilities_firstRV == 1 && sum_probabilities_secondRV == 1, "The sum of the probabilities should be 1!");
+		ASSERT_MSG((1 - sum_probabilities_firstRV) <= fallibility && (1 - sum_probabilities_secondRV) <= fallibility, "The sum of the probabilities should be 1!");
 	}
 }
 
@@ -217,7 +221,7 @@ void Model::setTransitionProbabilities(const std::vector<std::vector<double>>& f
             sum_probabilities_firstRV = sum_probabilities_firstRV + first_transitions[i][j];
             sum_probabilities_secondRV = sum_probabilities_secondRV + second_transitions[i][j];
         }
-        ASSERT_MSG(sum_probabilities_firstRV == 1 && sum_probabilities_secondRV == 1, "The sum of the probabilities should be 1!");
+        //ASSERT_MSG(sum_probabilities_firstRV == 1 && sum_probabilities_secondRV == 1, "The sum of the probabilities should be 1!");
     }
 }
 

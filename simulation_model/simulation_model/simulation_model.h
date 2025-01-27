@@ -60,6 +60,8 @@ public:
 	void readingTransitionProbabilityFromFiles(const std::string& firstRVProbabilityFile, const std::string& secondRVProbabilityFile);
     void setParamsRandomVariable(std::vector<double>& alphas);
     void setTransitionProbabilities(const std::vector<std::vector<double>>& first_transitions, const std::vector<std::vector<double>>& second_transitions);
+public: 
+	static const double fallibility;
 private:
     int _lotteryInitialState() const;
 	double _timeSpentState(const int state, NumberRV& number_RV);
