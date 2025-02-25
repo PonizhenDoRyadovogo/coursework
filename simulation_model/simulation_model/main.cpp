@@ -4,69 +4,34 @@
 #include "simulation_model.h"
 
 int main()
-{			
-	int n;
-	double end_time;
-	std::cout << "Enter number of states: ";
-	std::cin >> n;
-	std::cout << std::endl;
-	std::cout << "Enter end time: ";
-	std::cin >> end_time;
-	std::cout << std::endl;
-	bool b = generationProbabilitiesFiles(n);
-	std::vector <double> lambds;
-	std::vector <double> alphas;
-	std::vector<std::vector<double>> data;
-	for (int i = 0; i < n; ++i)
+{		
+	int countState;
+	std::cout << "Enter a number of state: " << std::endl;
+	std::cin >> countState;
+	double endTime;
+	std::cout << "Enter end time: " << std::endl;
+	std::cin >> endTime;
+	//experiment_1
+	std::string fileLambds, fileAlphas;
+	std::cout<<"Enter the name of the file containing the values of the FIRST random variable(for example lambds.txt)" << std::endl;
+	std::cin >> fileLambds;
+	std::cout << "Enter the name of the file containing the values of the SECOND random variable(for example alphas.txt)" << std::endl;
+	std::cin >> fileAlphas;
+	std::vector<double> lambdsExperiment1 = readRVFromFile(fileLambds);
+	std::vector<double> alphasExperiment1 = readRVFromFile(fileAlphas);
+	Model experiment1(countState, lambdsExperiment1);
+	experiment1.setParamsRandomVariable(alphasExperiment1);
+	std::string fileFirst, fileSecond;
+	std::cout << "Enter the name of the file containing the transition probabilities for the FIRST random variable(for example first.txt)" << std::endl;
+	std::cin >> fileFirst;
+	std::cout << "Enter the name of the file containing the transition probabilities for the SECOND random variable(for example second.txt)" << std::endl;
+	std::cin >> fileSecond;
+	experiment1.readingTransitionProbabilityFromFiles(fileFirst, fileSecond);
+	for (int i = 50; i <= 1000; i += 50) 
 	{
-		std::random_device rd;
-		std::mt19937 gen(rd());
-		std::uniform_real_distribution<> dist(0.0, 100.0);
-		double random_number = dist(gen);
-		lambds.push_back(random_number);
-	}
-	for (int i = 0; i < n; ++i)
-	{
-		std::random_device rd;
-		std::mt19937 gen(rd());
-		std::uniform_real_distribution<> dist(0.0, 100.0);
-		double random_number = dist(gen);
-		alphas.push_back(random_number);
-	}
-	std::vector<double> iteration;
-	for (int i = 0; i < 100; ++i)
-	{
-		iteration.clear();
-		Model* model = new Model(n, lambds);
-		model->readingTransitionProbabilityFromFiles("first.txt", "second.txt");
-		model->setParamsRandomVariable(alphas);
-		model->simulation(end_time);
-		double total_number_iterations = 0.0;
-		for (int i = 0; i < n; ++i)
-		{
-			total_number_iterations += static_cast<double>(model->numberStaysInIthState(i));
-			iteration.push_back(static_cast<double>(model->numberStaysInIthState(i)));
-		}
-		for (int i = 0; i < n; ++i)
-		{
-			iteration[i] /= total_number_iterations;
-		}
-		data.push_back(iteration);
-	}
-	std::vector<double> result;
-	for (int i = 0; i < n; ++i)
-	{
-		double sum = 0.0;
-		for (int j = 0; j < n; ++j)
-		{
-			sum += data[j][i];
-		}
-		sum /= static_cast<double>(n);
-		result.push_back(sum);
-	}
-	for (int i = 0; i < n; ++i)
-	{
-		std::cout << "Average time spent in " << i + 1 << " state: " << result[i] << std::endl;
+		std::vector<double> resultFirstExperiment = experiment1.assessmentLengthStayInStates(i, endTime);
+		std::string fileName = "C:/coursework/resultExperiments/experiment1/firstExperimentWithCountIteration" + std::to_string(i) + ".txt";
+		writeVectorToFile(resultFirstExperiment, fileName);
 	}
 	return 0;
 }

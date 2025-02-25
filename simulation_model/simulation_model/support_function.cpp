@@ -118,3 +118,42 @@ bool generationProbabilitiesFiles(int number_states)
     
     return true;
 }
+
+void writeVectorToFile(const std::vector<double>& vec, const std::string& fileName)
+{
+    std::ofstream outFile(fileName);
+
+    if (!outFile.is_open())
+    {
+        std::cerr << "Error: file not open!" << std::endl;
+        return;
+    }
+
+    for (const auto& num : vec)
+    {
+        outFile << num << std::endl;
+    }
+
+    outFile.close();
+}
+
+std::vector<double> readRVFromFile(const std::string& fileName)
+{
+    std::vector<double> result;
+    std::ifstream inFile(fileName);
+
+    if (!inFile.is_open())
+    {
+        std::cerr << "Can't open file!\n";
+        return result;
+    }
+
+    double num;
+    while (inFile >> num)
+    {
+        result.push_back(num);
+    }
+
+    inFile.close();
+    return result;
+}

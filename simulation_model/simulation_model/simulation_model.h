@@ -43,6 +43,7 @@ protected:
 	std::vector<std::pair<double, double>> m_transitionProbabilities;
 	RandomVariableParametrs m_paramsRV;
 	int m_count = 0;
+	double m_timeSpent = 0;
 };
 
 class Model {
@@ -55,19 +56,22 @@ public:
 	void inputRandomVariableParams();
 	void inputTransitionProbability();
 	void print() const;
-	std::vector<double> simulation(const double end_time, double begin_time = 0.0);
+	std::vector<double> simulation(const double endTime, double beginTime = 0.0);
 	int numberStaysInIthState(int state_id) const;
 	void readingTransitionProbabilityFromFiles(const std::string& firstRVProbabilityFile, const std::string& secondRVProbabilityFile);
-    void setParamsRandomVariable(std::vector<double>& alphas);
-    void setTransitionProbabilities(const std::vector<std::vector<double>>& first_transitions, const std::vector<std::vector<double>>& second_transitions);
+    void setParamsRandomVariable(const std::vector<double>& alphas);
+    void setTransitionProbabilities(const std::vector<std::vector<double>>& firstTransitions, const std::vector<std::vector<double>>& secondTransitions);
+	void clear();
+public://experiments
+	std::vector<double> assessmentLengthStayInStates(const int countIteration, const double endTime);
 public: 
 	static const double fallibility;
 private:
     int _lotteryInitialState() const;
-	double _timeSpentState(const int state, NumberRV& number_RV);
-	int _lotteryState(int from_state, NumberRV& number_rv) const;
+	double _timeSpentState(const int state, NumberRV& numberRV);
+	int _lotteryState(int fromState, NumberRV& numberRV) const;
 private:
     std::vector<double> m_lambdaI;
 	std::vector<State> m_states;
-	int m_number_states = 2;
+	int m_numberStates = 2;
 };
