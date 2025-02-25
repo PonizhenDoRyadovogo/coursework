@@ -383,7 +383,82 @@ void MainWindow::visualizeSimulation(std::vector<double>& lambdas, std::vector<d
             initial_state = current_state;
             old_begin_time = begin_time;
         }
+        else // отрисовываем последнее состояние
+        {
+            result_vector.push_back(end_time);
+            double new_normalizedX = (1550.0 - 50.0) + 50;
+            scene->addLine(old_normalizedX, m_coordinateY[current_state], new_normalizedX, m_coordinateY[current_state], pen_state);
+            scene->addLine(new_normalizedX, m_coordinateY[current_state], new_normalizedX, 800, pen);//отрисовка вертикальной линии у последнего состояния
+            // отрисовываем пунктирную линию слева от последнего состояния
+            //ToDo: переделать это безобразие, вынести все в отдельные функции
+            if(initial_state > current_state)
+            {
+                //отрисовка вертикальных линий
+                scene->addLine(old_normalizedX, m_coordinateY[current_state], old_normalizedX, 800, pen);
+                //отрисовка стрелки
+                scene->addLine(old_normalizedX, m_coordinateY[current_state], old_normalizedX - 7, m_coordinateY[current_state] + 10, pen_arrow);
+                scene->addLine(old_normalizedX, m_coordinateY[current_state], old_normalizedX + 7, m_coordinateY[current_state] + 10, pen_arrow);
+                //отрисовка по какой СВ перешли
+                if(number_RV == NumberRV::First)
+                {
+                    auto* textRV = scene->addText("λ");
+                                   textRV->setFont(QFont("Arial", 16));
+                    textRV->setPos(old_normalizedX - 20, m_coordinateY[current_state] + 15);
+                    //textRV->setRotation(-90);
+                }
+                else
+                {
+                    auto* textRV = scene->addText("α");
+                                   textRV->setFont(QFont("Arial", 16));
+                    textRV->setPos(old_normalizedX - 20, m_coordinateY[current_state] + 15);
+                    //textRV->setRotation(-90);
+                }
+            }
+            else if(current_state > initial_state)
+            {
+                //отрисовка вертикальных линий
+                scene->addLine(old_normalizedX, m_coordinateY[initial_state], old_normalizedX, 800, pen);
+                //отрисовка стрелки
+                scene->addLine(old_normalizedX, m_coordinateY[current_state], old_normalizedX - 7, m_coordinateY[current_state] - 10, pen_arrow);
+                scene->addLine(old_normalizedX, m_coordinateY[current_state], old_normalizedX + 7, m_coordinateY[current_state] - 10, pen_arrow);
+                //отрисовка по какой СВ перешли
+                if(number_RV == NumberRV::First)
+                {
+                    auto* textRV = scene->addText("λ");
+                                   textRV->setFont(QFont("Arial", 16));
+                    textRV->setPos(old_normalizedX - 20, m_coordinateY[current_state] - 40);
+                    //textRV->setRotation(90);
+                }
+                else
+                {
+                    auto* textRV = scene->addText("α");
+                                   textRV->setFont(QFont("Arial", 16));
+                    textRV->setPos(old_normalizedX - 20, m_coordinateY[current_state] - 40);
+                    //textRV->setRotation(90);
+                }
+            }
+            else
+            {
+                //отрисовка вертикальных линий
+                scene->addLine(old_normalizedX, m_coordinateY[initial_state], old_normalizedX, 800, pen);
+                //отрисовка стрелки
+                scene->addLine(old_normalizedX, m_coordinateY[current_state], old_normalizedX - 10, m_coordinateY[current_state] - 7, pen_arrow);
+                scene->addLine(old_normalizedX, m_coordinateY[current_state], old_normalizedX - 10, m_coordinateY[current_state] + 7, pen_arrow);
+                //отрисовка по какой СВ перешли
+                if(number_RV == NumberRV::First)
+                {
+                    auto* textRV = scene->addText("λ");
+                                   textRV->setFont(QFont("Arial", 16));
+                    textRV->setPos(old_normalizedX - 10, m_coordinateY[current_state] - 40);
+                }
+                else
+                {
+                    auto* textRV = scene->addText("α");
+                                   textRV->setFont(QFont("Arial", 16));
+                    textRV->setPos(old_normalizedX - 10, m_coordinateY[current_state] - 40);
+                }
+            }
+        }
     }
-    scene->addLine(old_normalizedX, m_coordinateY[initial_state], old_normalizedX, 800, pen);//отрисовка вертикальной линии у последнего состояния
 }
 
