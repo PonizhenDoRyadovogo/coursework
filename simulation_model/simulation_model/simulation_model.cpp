@@ -261,6 +261,30 @@ std::vector<double> Model::assessmentLengthStayInStates(const int countIteration
 	return result;
 }
 
+double Model::assessmentIntervalDuration(const int countIteration, const double endTime)
+{
+	std::vector<double> tmpVector(m_numberStates, 0.0);
+	for (int i = 1; i <= countIteration; ++i)
+	{
+		std::vector<double> resultSimulation = simulation(endTime);
+		double sum = resultSimulation[0];
+		for (int i = 1; i < resultSimulation.size(); ++i)
+		{
+			sum += resultSimulation[i] - resultSimulation[i - 1];
+		}
+		sum /= resultSimulation.size();
+		tmpVector.push_back(sum);
+		clear();
+	}
+	double sum = 0.0;
+	for (const double& num : tmpVector)
+	{
+		sum += num;
+	}
+	sum /= countIteration;
+	return sum;
+}
+
 int State::getId() const
 {
 	return m_id;

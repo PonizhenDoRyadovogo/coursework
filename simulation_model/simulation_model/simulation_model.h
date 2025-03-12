@@ -64,6 +64,7 @@ public:
 	void clear();
 public://experiments
 	std::vector<double> assessmentLengthStayInStates(const int countIteration, const double endTime);
+	double assessmentIntervalDuration(const int countIteration, const double endTime);
 public: 
 	static const double fallibility;
 private:
