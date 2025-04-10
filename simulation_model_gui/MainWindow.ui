@@ -17,8 +17,14 @@
    <layout class="QGridLayout" name="gridLayout">
     <item row="2" column="1">
      <widget class="QLabel" name="labelSecondTable">
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string>Вероятности переходов по второй случайной величине:</string>
+       <string>Вероятности переходов по второй
+случайной величине:</string>
       </property>
      </widget>
     </item>
@@ -31,13 +37,15 @@
     <item row="1" column="1">
      <widget class="QTableWidget" name="firstTransitionTable"/>
     </item>
-    <item row="1" column="0" rowspan="3">
-     <widget class="QGraphicsView" name="graphicsView"/>
-    </item>
     <item row="7" column="0">
      <widget class="QLabel" name="labelLambds">
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string>Значения случайного процесса и параметры λ для случайной величины:</string>
+       <string>Значения случайного процесса λ:</string>
       </property>
      </widget>
     </item>
@@ -46,6 +54,11 @@
     </item>
     <item row="9" column="0">
      <widget class="QLabel" name="labelCountStates">
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>Количество состояний:</string>
       </property>
@@ -53,8 +66,14 @@
     </item>
     <item row="0" column="1">
      <widget class="QLabel" name="labelFirstTable">
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string>Вероятности переходов по первой случайной величине:</string>
+       <string>Вероятности переходов по первой 
+случайной величине:</string>
       </property>
      </widget>
     </item>
@@ -66,6 +85,11 @@
     </item>
     <item row="5" column="1">
      <widget class="QLabel" name="labelTime">
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>Время работы:</string>
       </property>
@@ -73,6 +97,11 @@
     </item>
     <item row="5" column="0">
      <widget class="QLabel" name="labelAplpha">
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>Параметры α для случайной величины:</string>
       </property>
@@ -80,10 +109,18 @@
     </item>
     <item row="8" column="1">
      <widget class="QPushButton" name="updateButton">
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>Запуск</string>
       </property>
      </widget>
+    </item>
+    <item row="0" column="0" rowspan="4">
+     <widget class="QGraphicsView" name="graphicsView"/>
     </item>
    </layout>
   </widget>

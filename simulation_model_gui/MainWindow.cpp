@@ -129,32 +129,37 @@ void MainWindow::updateSimulation() {
 void MainWindow::drawCoordinateSystem() {
     scene->setSceneRect(0, 0, 1700, 900); // Установите фиксированные границы сцены
 
+
+    QPen penCoordinateSystem;
+    penCoordinateSystem.setWidth(2);
     // Рисуем оси
-    scene->addLine(50, 800, 1600, 800); // Ось времени (oX)
-    scene->addLine(50, 800, 50, 50);  // Ось лямбд (oY)
+    scene->addLine(50, 800, 1600, 800)->setPen(penCoordinateSystem);// Ось времени (oX)
+    scene->addLine(50, 800, 50, 50)->setPen(penCoordinateSystem);  // Ось лямбд (oY)
 
     // Добавляем стрелку на конце оси OX
-    scene->addLine(1600, 800, 1596, 798); // Линия стрелки вниз
-    scene->addLine(1600, 800, 1596, 802); // Линия стрелки вверх
+    scene->addLine(1600, 800, 1589, 798)->setPen(penCoordinateSystem); // Линия стрелки вниз
+    scene->addLine(1600, 800, 1589, 802)->setPen(penCoordinateSystem); // Линия стрелки вверх
 
     // Добавляем стрелку на конце оси OY
-    scene->addLine(50, 50, 48, 60); // Линия стрелки влево
-    scene->addLine(50, 50, 52, 60); // Линия стрелки вправо
+    scene->addLine(50, 50, 48, 65)->setPen(penCoordinateSystem); // Линия стрелки влево
+    scene->addLine(50, 50, 52, 65)->setPen(penCoordinateSystem);// Линия стрелки вправо
 
     // Метки для оси oX
     for (int i = 0; i <= 10; ++i) {
         int x = 50 + i * 150;
-        scene->addLine(x, 803, x, 797);
+        scene->addLine(x, 803, x, 797)->setPen(penCoordinateSystem);
         auto *textItem = scene->addText(QString::number(i));
         textItem->setPos(x - 10, 810); // Текст под засечкой
+        textItem->setScale(1.5);
     }
 
     // Метки для оси oY
     for (int i = 1; i <= 5; ++i) {
         int y = 800 - i * 140; // Позиция засечки по оси Y
-        scene->addLine(45, y, 55, y); // Засечка
+        scene->addLine(45, y, 55, y)->setPen(penCoordinateSystem); // Засечка
         auto *textItem = scene->addText(QString::number(i));
         textItem->setPos(15, y - 10); // Текст слева от засечки
+        textItem->setScale(1.5);
     }
 }
 
@@ -162,17 +167,19 @@ void MainWindow::drawCoordinateSystem(const std::vector<double>& lambdas, const 
 {
     scene->setSceneRect(0, 0, 1700, 900);
 
+    QPen penCoordinateSystem;
+    penCoordinateSystem.setWidth(2);
     // Рисуем оси
-    scene->addLine(50, 800, 1600, 800); // Ось времени (oX)
-    scene->addLine(50, 800, 50, 50);  // Ось лямбд (oY)
+    scene->addLine(50, 800, 1600, 800)->setPen(penCoordinateSystem);// Ось времени (oX)
+    scene->addLine(50, 800, 50, 50)->setPen(penCoordinateSystem);  // Ось лямбд (oY)
 
     // Добавляем стрелку на конце оси OX
-    scene->addLine(1600, 800, 1596, 798); // Линия стрелки вниз
-    scene->addLine(1600, 800, 1596, 802); // Линия стрелки вверх
+    scene->addLine(1600, 800, 1589, 798)->setPen(penCoordinateSystem); // Линия стрелки вниз
+    scene->addLine(1600, 800, 1589, 802)->setPen(penCoordinateSystem); // Линия стрелки вверх
 
     // Добавляем стрелку на конце оси OY
-    scene->addLine(50, 50, 48, 60); // Линия стрелки влево
-    scene->addLine(50, 50, 52, 60); // Линия стрелки вправо
+    scene->addLine(50, 50, 48, 65)->setPen(penCoordinateSystem); // Линия стрелки влево
+    scene->addLine(50, 50, 52, 65)->setPen(penCoordinateSystem);// Линия стрелки вправо
 
     auto *origin_coordinate = scene->addText(QString::number(0));
     origin_coordinate->setPos(35, 805);
@@ -186,7 +193,7 @@ void MainWindow::drawCoordinateSystem(const std::vector<double>& lambdas, const 
     {
         QFont font;
         font.setBold(true);
-        scene->addLine(48, 200, 52, 200);
+        scene->addLine(48, 200, 52, 200)->setPen(penCoordinateSystem);
         m_coordinateY.push_back(200);
         QString lambda_text = QString("λ%1 = %2").arg(1).arg(lambdas[0], 0, 'f', 2); // Лямбда с 2 знаками после запятой
         auto* textItem = scene->addText(lambda_text);
@@ -194,7 +201,7 @@ void MainWindow::drawCoordinateSystem(const std::vector<double>& lambdas, const 
         textItem->setFont(font);
         textItem->setPos(0, 200 - 10); // Текст слева от засечки
 
-        scene->addLine(48, 650, 52, 650);
+        scene->addLine(48, 650, 52, 650)->setPen(penCoordinateSystem);
         m_coordinateY.push_back(650);
         lambda_text = QString("λ%1 = %2").arg(2).arg(lambdas[1], 0, 'f', 2); // Лямбда с 2 знаками после запятой
         textItem = scene->addText(lambda_text);
@@ -217,7 +224,7 @@ void MainWindow::drawCoordinateSystem(const std::vector<double>& lambdas, const 
                 normalizedY -= 25;  // Немного выше
             }
             // Рисуем засечку
-            scene->addLine(48, normalizedY, 52, normalizedY); // Засечка оси
+            scene->addLine(48, normalizedY, 52, normalizedY)->setPen(penCoordinateSystem); // Засечка оси
             m_coordinateY.push_back(normalizedY);
             // Отображаем лямбду как текст
             QString lambda_text = QString("λ%1 = %2").arg(i + 1).arg(lambdas[i], 0, 'f', 2); // Лямбда с 2 знаками после запятой
