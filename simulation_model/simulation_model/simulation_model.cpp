@@ -21,13 +21,11 @@ Model::Model(int n, std::vector<double> &lambdaI)
 {
 	ASSERT_MSG(n > 0, "The number of states must be greater than 0!");
 	ASSERT_MSG(n == lambdaI.size(), "The number of states does not match the number of values of a random process!");
-	if (!std::is_sorted(lambdaI.begin(), lambdaI.end(), std::greater<int>()))
-	{
+	if (!std::is_sorted(lambdaI.begin(), lambdaI.end(), std::greater<int>())) {
 		std::sort(lambdaI.begin(), lambdaI.end(), std::greater<int>());
 	}
 	m_numberStates = n;
-	for (int i = 0; i < n; ++i)
-	{
+	for (int i = 0; i < n; ++i) {
 		m_states.emplace_back(i, n);
 		m_lambdaI.push_back(lambdaI[i]);
 	}
@@ -36,8 +34,7 @@ Model::Model(int n, std::vector<double> &lambdaI)
 void Model::inputRandomVariableParams()
 {
 	double alpha;
-	for (int i = 0; i < m_states.size(); ++i)
-	{
+	for (int i = 0; i < m_states.size(); ++i) {
 		std::cout << "Enter the parameter of the random variable alpha for " << i + 1 << " state: ";
 		std::cin >> alpha;
 		std::cout << std::endl;
@@ -50,13 +47,11 @@ void Model::inputTransitionProbability()
 {
 	double prob1, prob2;
 	double sum_probabilities_firstRV, sum_probabilities_secondRV;
-	for (int i = 0; i < m_states.size(); ++i)
-	{
+	for (int i = 0; i < m_states.size(); ++i) {
 		std::cout << "The transition probabilities for " << i + 1 << " state:\n";
 		sum_probabilities_firstRV = 0;
 		sum_probabilities_secondRV = 0;
-		for (int j = 0; j < m_states.size(); ++j)
-		{
+		for (int j = 0; j < m_states.size(); ++j) {
 			std::cout << "enter the probabilities of transitions to the " << j + 1 << " state by the first random and second random values, respectively: ";
 			std::cin >> prob1 >> prob2;
 			std::cout << std::endl;
@@ -72,8 +67,7 @@ void Model::inputTransitionProbability()
 
 void Model::print() const
 {
-	for (const auto& state : m_states)
-	{
+	for (const auto& state : m_states) {
 		state.print();
 	}
 }
@@ -87,8 +81,7 @@ int Model::_lotteryInitialState() const
 	double random_number = dist(gen) / 100.0;
 	//2 step
 	random_number = random_number * m_numberStates;
-	if (random_number == m_numberStates)
-	{
+	if (random_number == m_numberStates) {
 		random_number -= 1;
 	}
 	return static_cast<int>(random_number);
@@ -121,16 +114,12 @@ int Model::_lotteryState(int fromState, NumberRV& numberRV) const
 	double random_number = dist(gen) / 100.0;
 	for (int i = 0; i < m_numberStates; ++i)
 	{
-		if (numberRV == NumberRV::First)
-		{
+		if (numberRV == NumberRV::First) {
 			sum = sum + m_states[fromState].m_transitionProbabilities[i].first;
-		}
-		else
-		{
+		} else {
 			sum = sum + m_states[fromState].m_transitionProbabilities[i].second;
 		}
-		if (random_number <= sum)
-		{
+		if (random_number <= sum) {
 			return i;
 		}
 	}
@@ -150,21 +139,17 @@ std::vector<double> Model::simulation(const double endTime, double beginTime)
 	m_states[initial_state].m_timeSpent += tao;
 	result_vector.push_back(beginTime);
 	int current_state = initial_state;
-	while (beginTime <= endTime)
-	{
+	while (beginTime <= endTime) {
 		current_state = _lotteryState(current_state, number_RV);
 		assert(current_state != INT_MAX);
 		//add a counter that counts the number of stays in the state
 		m_states[current_state].m_count++;
 		tao = _timeSpentState(current_state, number_RV);
 		beginTime = beginTime + tao;
-		if (beginTime <= endTime)
-		{
+		if (beginTime <= endTime) {
 			m_states[current_state].m_timeSpent += tao;
 			result_vector.push_back(beginTime);
-		}
-		else
-		{
+		} else {
 
 			m_states[current_state].m_timeSpent += endTime - (beginTime - tao);
 			result_vector.push_back(endTime);
@@ -187,12 +172,10 @@ void Model::readingTransitionProbabilityFromFiles(const std::string& firstRVProb
 	
 	double sum_probabilities_firstRV = 0.0, sum_probabilities_secondRV = 0.0;
 	double prob1, prob2;
-	for (int i = 0; i < m_numberStates; ++i)
-	{
+	for (int i = 0; i < m_numberStates; ++i) {
 		sum_probabilities_firstRV = 0.0;
 		sum_probabilities_secondRV = 0.0;
-		for (int j = 0; j < m_numberStates; ++j)
-		{
+		for (int j = 0; j < m_numberStates; ++j) {
 			prob1 = matrix1[i][j];
 			prob2 = matrix2[i][j];
 			//ASSERT_MSG(prob1 <= 1 && prob2 <= 1, "The probability cannot be greater than 1!");
@@ -208,8 +191,7 @@ void Model::readingTransitionProbabilityFromFiles(const std::string& firstRVProb
 
 void Model::setParamsRandomVariable(const std::vector<double>& alphas)
 {
-    for (int i = 0; i < m_states.size(); ++i)
-    {
+    for (int i = 0; i < m_states.size(); ++i) {
         m_states[i].setRandomVariableParams(m_lambdaI[i], alphas[i]);
     }
 }
@@ -217,12 +199,10 @@ void Model::setParamsRandomVariable(const std::vector<double>& alphas)
 void Model::setTransitionProbabilities(const std::vector<std::vector<double>>& firstTransitions, const std::vector<std::vector<double>>& secondTransitions)
 {
     double sum_probabilities_firstRV = 0, sum_probabilities_secondRV = 0;
-    for (int i = 0; i < m_states.size(); ++i)
-    {
+    for (int i = 0; i < m_states.size(); ++i) {
         sum_probabilities_firstRV = 0;
         sum_probabilities_secondRV = 0;
-        for (int j = 0; j < m_states.size(); ++j)
-        {
+        for (int j = 0; j < m_states.size(); ++j) {
             ASSERT_MSG(firstTransitions[i][j] <= 1 && secondTransitions[i][j] <= 1, "The probability cannot be greater than 1!");
             ASSERT_MSG(firstTransitions[i][j] > 0 && secondTransitions[i][j] > 0, "The probability cannot be less than zero!");
             m_states[i].setTransitionProbability(j, firstTransitions[i][j], secondTransitions[i][j]);
@@ -235,8 +215,7 @@ void Model::setTransitionProbabilities(const std::vector<std::vector<double>>& f
 
 void Model::clear()
 {
-	for (int i = 0; i < m_numberStates; ++i)
-	{
+	for (int i = 0; i < m_numberStates; ++i) {
 		m_states[i].m_count = 0;
 		m_states[i].m_timeSpent = 0.0;
 	}
@@ -245,17 +224,14 @@ void Model::clear()
 std::vector<double> Model::assessmentLengthStayInStates(const int countIteration, const double endTime)
 {
 	std::vector<double> result(m_numberStates, 0.0);
-	for (int i = 1; i <= countIteration; ++i)
-	{
+	for (int i = 1; i <= countIteration; ++i) {
 		simulation(endTime);
-		for (int j = 0; j < m_numberStates; ++j)
-		{
+		for (int j = 0; j < m_numberStates; ++j) {
 			result[j] += m_states[j].m_timeSpent;
 		}
 		clear();
 	}
-	for (double& num : result)
-	{
+	for (double& num : result) {
 		num /= countIteration;
 	}
 	return result;
@@ -264,12 +240,10 @@ std::vector<double> Model::assessmentLengthStayInStates(const int countIteration
 double Model::assessmentIntervalDuration(const int countIteration, const double endTime)
 {
 	std::vector<double> tmpVector(m_numberStates, 0.0);
-	for (int i = 1; i <= countIteration; ++i)
-	{
+	for (int i = 1; i <= countIteration; ++i) {
 		std::vector<double> resultSimulation = simulation(endTime);
 		double sum = resultSimulation[0];
-		for (int i = 1; i < resultSimulation.size(); ++i)
-		{
+		for (int i = 1; i < resultSimulation.size(); ++i) {
 			sum += resultSimulation[i] - resultSimulation[i - 1];
 		}
 		sum /= resultSimulation.size();
@@ -277,8 +251,7 @@ double Model::assessmentIntervalDuration(const int countIteration, const double 
 		clear();
 	}
 	double sum = 0.0;
-	for (const double& num : tmpVector)
-	{
+	for (const double& num : tmpVector) {
 		sum += num;
 	}
 	sum /= countIteration;
@@ -311,8 +284,7 @@ void State::print() const
 {
 	std::cout << "State: " << m_id + 1 << ":\n";
 	std::cout << "random variable parameters: lambda = " << m_paramsRV.lambda << ", alpha = " << m_paramsRV.alpha << "\n";
-	for (int j = 0; j < m_transitionProbabilities.size(); ++j)
-	{
+	for (int j = 0; j < m_transitionProbabilities.size(); ++j) {
 		std::cout << "->" << j + 1 << ": " << m_transitionProbabilities[j].first << ", " << m_transitionProbabilities[j].second << "\n";
 	}
 }

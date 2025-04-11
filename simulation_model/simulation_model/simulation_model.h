@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SIMULATION_MODEL
+#define SIMULATION_MODEL
 
 #include <iostream>
 #include <vector>
@@ -76,3 +77,5 @@ private:
 	std::vector<State> m_states;
 	int m_numberStates = 2;
 };
+
+#endif
