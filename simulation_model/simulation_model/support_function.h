@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SUPPORT_FUNCTIONS
+#define SUPPORT_FUNCTIONS
 
 #include <iostream>
 #include <fstream>
@@ -12,3 +13,5 @@ std::vector<std::vector<double>> readMatrixFromFile(const std::string& fileName)
 bool generationProbabilitiesFiles(int number_states);
 void writeVectorToFile(const std::vector<double>& vec, const std::string& fileName);
 std::vector<double> readRVFromFile(const std::string& fileName);
+
+#endif
